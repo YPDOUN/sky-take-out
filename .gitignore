@@ -3,4 +3,14 @@
 *.iml
 *.class
 *Test.java
+# 日志文件
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 配置文件（避免上传账号密码）
+/src/main/resources/application.yml
+/src/main/resources/application.properties
 **/test/

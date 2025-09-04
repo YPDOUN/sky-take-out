@@ -1,7 +1,6 @@
 package com.sky.controller.admin;
 
 import com.sky.constant.JwtClaimsConstant;
-import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
@@ -16,10 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
-
-import java.beans.beancontext.BeanContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,9 +101,9 @@ public class EmployeeController {
      */
     @ApiOperation("员工状态修改")
     @PostMapping("/status/{status}")
-    public Result acountStartOrStop(@PathVariable Integer status, @RequestParam Long id){
+    public Result accountStartOrStop(@PathVariable Integer status, @RequestParam Long id){
         log.info("员工状态修改：{}, id：{}", status, id);
-        employeeService.acountStartOrStop(status, id);
+        employeeService.accountStartOrStop(status, id);
         return  Result.success();
     }
 
