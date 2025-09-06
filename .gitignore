@@ -11,6 +11,6 @@
 Thumbs.db
 
 # 配置文件（避免上传账号密码）
-/src/main/resources/application.yml
-/src/main/resources/application.properties
+sky-server/src/main/resources/application.yml
+sky-server/src/main/resources/application-dev.yml
 **/test/

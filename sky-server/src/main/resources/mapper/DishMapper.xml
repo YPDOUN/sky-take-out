@@ -5,4 +5,71 @@
 
 <mapper namespace="com.sky.mapper.DishMapper">
     <!-- 在这里添加SQL映射 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into dish(name, category_id, price, image, description, status, create_time, update_time, create_user, update_user)
+        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
+    </insert>
+
+
+    <update id="update">
+        update dish
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            update_time = #{updateTime},
+            update_user = #{updateUser}
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="pageQuery" resultType="com.sky.vo.DishVO">
+        select d.*, c.name categoryName  from dish d
+        left join category c on d.category_id = c.id
+        <where>
+            <if test="name != null">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and d.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="dishVOResultMap" type="com.sky.vo.DishVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="categoryName" column="categoryName"/>
+        <result property="price" column="price"/>
+        <result property="image" column="image"/>
+        <result property="description" column="description"/>
+        <result property="status" column="status"/>
+        <result property="updateTime" column="update_time"/>
+        <collection property="flavors" ofType="com.sky.entity.DishFlavor">
+            <id property="id" column="flavor_id"/>
+            <result property="name" column="flavor_name"/>
+            <result property="value" column="flavor_value"/>
+            <result property="dishId" column="dish_id"/>
+        </collection>
+    </resultMap>
+
+    <select id="getById" resultMap="dishVOResultMap">
+        select d.*,
+               c.name categoryName,
+               df.id flavor_id,
+               df.dish_id,
+               df.name flavor_name,
+               df.value flavor_value from dish d
+        left join category c on d.category_id = c.id
+        left join dish_flavor df on d.id = df.dish_id
+        where d.id = #{id}
+    </select>
+
 </mapper>
