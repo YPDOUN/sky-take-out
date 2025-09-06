@@ -6,9 +6,10 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface DishMapper {
@@ -50,4 +51,16 @@ public interface DishMapper {
      * @return
      */
     DishVO getById(Long id);
+
+    /**
+     * 返回集合ids中，状态为status的菜品数量
+     * @param ids
+     */
+    Integer countByIdsAndStatus(List<Long> ids, Integer status);
+
+    /**
+     * 批量删除菜品
+     * @param ids
+     */
+    void deleteByIds(List<Long> ids);
 }
