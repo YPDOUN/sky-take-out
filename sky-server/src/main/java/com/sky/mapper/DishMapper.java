@@ -37,13 +37,12 @@ public interface DishMapper {
     Page<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
 
     /**
-     * 启用禁用菜品
+     * 更新菜品信息
      * @param dish
      * @return
      */
     @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
-
 
     /**
      * 根据id查询菜品及其口味信息
@@ -63,4 +62,18 @@ public interface DishMapper {
      * @param ids
      */
     void deleteByIds(List<Long> ids);
+
+    /**
+     * 根据分类id查询菜品
+     * @return
+     */
+    @Select("select * from dish where category_id = #{id}")
+    List<DishVO> getByCategoryId(Long id);
+
+    /**
+     * 根据套餐id查询对应的菜品
+     * @param id
+     * @return
+     */
+    List<Dish> getBySetmealId(Long id);
 }
