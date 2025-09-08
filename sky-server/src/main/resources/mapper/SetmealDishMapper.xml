@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sky.mapper.SetmealDishMapper">
+
+
+    <insert id="insertRelationOfDishAndSetmeal">
+        insert into setmeal_dish(setmeal_id, dish_id, name, price, copies) values
+        <foreach collection="setmealDishs" item = "setmealDish" separator=",">
+            (#{setmealDish.setmealId}, #{setmealDish.dishId}, #{setmealDish.name},
+             #{setmealDish.price}, #{setmealDish.copies})
+        </foreach>
+    </insert>
+
+    <delete id="deleteBySetmealIds">
+        delete from setmeal_dish where setmeal_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getSetmealIdByDishIds" resultType="java.lang.Long">
+        select setmeal_id from setmeal_dish where dish_id in
+        <foreach collection="ids" item="dishId" open="(" separator="," close=")">
+            #{dishId}
+        </foreach>
+    </select>
+
+    <select id="countOfDisableDish" resultType="java.lang.Integer">
+        select count(*) from setmeal_dish sd
+        left join dish d on sd.dish_id = d.id
+        where sd.setmeal_id = #{setmealId} and status = #{status}
+    </select>
+</mapper>
