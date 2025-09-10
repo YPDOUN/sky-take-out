@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -168,7 +169,21 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public List<DishVO> getByCategoryId(Long id) {
-        List<DishVO> list = dishMapper.getByCategoryId(id);
+
+        List<Dish> dishList = dishMapper.getByCategoryId(id);
+
+        List<DishVO> list = new ArrayList<>();
+
+        if (dishList != null && !dishList.isEmpty()) {
+            dishList.forEach(dish  -> {
+                DishVO dishVO = new DishVO();
+                BeanUtils.copyProperties(dish, dishVO);
+                //原先用的是ResultMap将flavors属性映射，所以需要单独写一个获取口味数据的方法
+                List<DishFlavor> flavors = dishFlavorsMapper.getByDishId(dish.getId());
+                dishVO.setFlavors(flavors);
+                list.add(dishVO);
+            });
+        }
         return list;
     }
 }

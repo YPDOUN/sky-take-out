@@ -68,7 +68,7 @@ public interface DishMapper {
      * @return
      */
     @Select("select * from dish where category_id = #{id}")
-    List<DishVO> getByCategoryId(Long id);
+    List<Dish> getByCategoryId(Long id);
 
     /**
      * 根据套餐id查询对应的菜品
