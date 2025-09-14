@@ -49,7 +49,8 @@ public interface DishMapper {
      * @param id
      * @return
      */
-    DishVO getById(Long id);
+    @Select("select * from dish where id = #{id}")
+    Dish getById(Long id);
 
     /**
      * 返回集合ids中，状态为status的菜品数量

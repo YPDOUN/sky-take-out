@@ -6,6 +6,7 @@ import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
@@ -87,14 +88,15 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public SetmealVO getById(Long id) {
 
-        //先完成setmeal的组装
-        SetmealVO setmeal = setmealMapper.getById(id);
-
-        //查询setmealDish，完成对套餐内菜品的组装、
+        Setmeal setmeal = setmealMapper.getById(id);
         List<SetmealDish> list = setmealDishMapper.getBySetmealId(id);
-        setmeal.setSetmealDishes(list);
 
-        return setmeal;
+        //完成SelmealVO的组装
+        SetmealVO setmealVO = new SetmealVO();
+        BeanUtils.copyProperties(setmeal, setmealVO);
+        setmealVO.setSetmealDishes(list);
+
+        return setmealVO;
     }
 
     /**
@@ -179,11 +181,11 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 根据分类id查询套餐
-     * @param categoryId
+     * @param category
      * @return
      */
-    public List<Setmeal> getByCategoryId(Long categoryId){
-        List<Setmeal> list = setmealMapper.getByCategoryId(categoryId);
+    public List<Setmeal> getByCategoryId(Category category){
+        List<Setmeal> list = setmealMapper.getByCategoryId(category);
         return list;
     }
 

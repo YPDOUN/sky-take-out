@@ -68,18 +68,6 @@
         </collection>
     </resultMap>
 
-    <select id="getById" resultMap="dishVOResultMap">
-        select d.*,
-               c.name categoryName,
-               df.id flavor_id,
-               df.dish_id,
-               df.name flavor_name,
-               df.value flavor_value from dish d
-        left join category c on d.category_id = c.id
-        left join dish_flavor df on d.id = df.dish_id
-        where d.id = #{id}
-    </select>
-    
     <select id="countByIdsAndStatus" resultType="java.lang.Integer">
         select COUNT(*) from dish where status = #{status} and id in 
         <foreach collection="ids" item="id" open="(" separator="," close=")">

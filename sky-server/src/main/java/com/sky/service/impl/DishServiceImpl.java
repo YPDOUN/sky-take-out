@@ -19,7 +19,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,8 +97,12 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public DishVO getById(Long id) {
-        //另一种是分别查询，再将数据组装成VO对象返回
-        DishVO dishVO = dishMapper.getById(id);
+        Dish dish = dishMapper.getById(id);
+
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish, dishVO);
+        dishVO.setFlavors(dishFlavorsMapper.getByDishId(id));
+
         return dishVO;
     }
 
@@ -158,8 +161,11 @@ public class DishServiceImpl implements DishService {
             //设置口味对应的菜品id
             flavors.forEach(flavor -> flavor.setDishId(dish.getId()));
         }
+
         //批量保存口味数据
-        dishFlavorsMapper.insert(flavors);
+        if (flavors != null && !flavors.isEmpty()) {
+            dishFlavorsMapper.insert(flavors);
+        }
 
     }
 

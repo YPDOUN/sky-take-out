@@ -2,6 +2,7 @@ package com.sky.controller.user;
 
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.UserLoginDTO;
 import com.sky.entity.User;
 import com.sky.properties.JwtProperties;
@@ -53,6 +54,9 @@ public class UserController {
                 .openid(user.getOpenid())
                 .token(token)
                 .build();
+
+        //将用户id保存到ThreadLocal
+        BaseContext.setCurrentId(user.getId());
 
         return Result.success(userLoginVO);
     }
