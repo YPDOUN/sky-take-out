@@ -1,8 +1,11 @@
 package com.sky.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
@@ -10,10 +13,12 @@ import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -151,7 +156,39 @@ public class OrderServiceImpl implements OrderService {
      * @param ordersPageQueryDTO
      */
     @Override
-    public List<OrderDetail> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO) {
-        return List.of();
+    public PageResult pageQuery(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+
+        Orders orders = new Orders();
+        orders.setUserId(BaseContext.getCurrentId());
+        orders.setStatus(ordersPageQueryDTO.getStatus());
+
+        Page<OrderVO> page = orderMapper.page(orders);
+        page.forEach(order -> {
+            List<OrderDetail> orderDetails = orderDetailMapper.getByOrderId(orders);
+            order.setOrderDetailList(orderDetails);
+
+        });
+
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 根据订单id获取数据
+     * @param id
+     */
+    @Override
+    public OrderVO getById(Long id) {
+
+        //分别查询订单数据和对应的订单详细信息
+        Orders orders = orderMapper.getById(id);
+        List<OrderDetail> orderDetails = orderDetailMapper.getByOrderId(orders);
+
+        //封装为OrderVO对象
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(orders, orderVO);
+        orderVO.setOrderDetailList(orderDetails);
+
+        return orderVO;
     }
 }

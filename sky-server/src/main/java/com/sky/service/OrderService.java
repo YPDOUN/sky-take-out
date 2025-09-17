@@ -3,11 +3,10 @@ package com.sky.service;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
-import com.sky.entity.OrderDetail;
+import com.sky.result.PageResult;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
-
-import java.util.List;
+import com.sky.vo.OrderVO;
 
 public interface OrderService {
 
@@ -34,5 +33,11 @@ public interface OrderService {
      * 分页查询用户的历史订单
      * @param ordersPageQueryDTO
      */
-    List<OrderDetail> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+    PageResult pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    /**
+     * 查询订单详情
+     * @param id
+     */
+    OrderVO getById(Long id);
 }

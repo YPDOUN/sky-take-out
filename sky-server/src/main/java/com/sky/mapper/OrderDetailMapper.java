@@ -1,8 +1,12 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
+import com.sky.dto.OrdersDTO;
 import com.sky.entity.OrderDetail;
+import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -14,4 +18,13 @@ public interface OrderDetailMapper {
      * @param detailList
      */
     void insertBatch(List<OrderDetail> detailList);
+
+    /**
+     * 通过orderId获取订单详情
+     * @param orders
+     * @return
+     */
+    @Select("select * from order_detail where order_id = #{id}")
+    List<OrderDetail> getByOrderId(Orders orders);
+
 }
