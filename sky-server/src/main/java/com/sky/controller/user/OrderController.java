@@ -57,13 +57,15 @@ public class OrderController {
 
     /**
      * 历史订单查询
-     * @param ordersPageQueryDTO
+     * @param page
+     * @param pageSize
+     * @param status
      */
     @GetMapping("/historyOrders")
     @ApiOperation("历史订单查询")
-    public Result<PageResult> historyOrders(OrdersPageQueryDTO ordersPageQueryDTO) {
-        log.info("查询参数：{}", ordersPageQueryDTO);
-        PageResult list = orderService.pageQuery(ordersPageQueryDTO);
+    public Result<PageResult> historyOrders(Integer page, Integer pageSize, Integer status) {
+        log.info("查询参数，page：{}, pageSize:{}, status:{}", page, pageSize, status);
+        PageResult list = orderService.historyOrders(page, pageSize, status);
         return Result.success(list);
     }
 
@@ -79,5 +81,27 @@ public class OrderController {
         return Result.success(orderVO);
     }
 
+    /**
+     * 取消订单
+     * @param id
+     */
+    @PutMapping("/cancel/{id}")
+    @ApiOperation("取消订单")
+    public Result<String> cancel(@PathVariable Long id) throws Exception {
+        log.info("取消订单id：{}", id);
+        orderService.cancel(id);
+        return Result.success();
+    }
 
+    /**
+     * 再来一单
+     * @param id
+     */
+    @PostMapping("/repetition/{id}")
+    @ApiOperation("再来一单")
+    public Result<String> repetition(@PathVariable Long id) {
+        log.info("再来一单， 订单id：{}", id);
+        orderService.repetition(id);
+        return Result.success();
+    }
 }

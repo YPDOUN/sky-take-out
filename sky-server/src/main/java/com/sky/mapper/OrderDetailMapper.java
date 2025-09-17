@@ -21,10 +21,10 @@ public interface OrderDetailMapper {
 
     /**
      * 通过orderId获取订单详情
-     * @param orders
+     * @param orderId
      * @return
      */
-    @Select("select * from order_detail where order_id = #{id}")
-    List<OrderDetail> getByOrderId(Orders orders);
+    @Select("select * from order_detail where order_id = #{orderId}")
+    List<OrderDetail> getByOrderId(Long orderId);
 
 }

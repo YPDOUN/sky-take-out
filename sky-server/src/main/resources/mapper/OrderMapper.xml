@@ -45,11 +45,23 @@
         where id = #{id}
     </update>
 
-    <select id="page" resultType="com.sky.vo.OrderVO">
+    <select id="pageOfHistory" resultType="com.sky.vo.OrderVO">
         select * from orders
         <where>
+            user_id = #{userId}
             <if test="status != null"> and status = #{status}</if>
-            and user_id = #{userId}
         </where>
     </select>
+
+    <select id="page" resultType="com.sky.entity.Orders">
+        select * from orders
+        <where>
+            <if test="beginTime != null">and order_time &gt; #{beginTime}</if>
+            <if test="endTime != null">and order_time &lt; #{endTime}</if>
+            <if test="number != null">and number like concat('%', #{number}, '%')</if>
+            <if test="phone != null"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="status != null"> and status = #{status}</if>
+        </where>
+    </select>
+
 </mapper>
