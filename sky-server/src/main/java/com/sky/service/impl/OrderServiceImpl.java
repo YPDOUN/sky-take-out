@@ -12,6 +12,7 @@ import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.utils.BaiduUtil;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
@@ -43,18 +44,17 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private WeChatPayUtil weChatPayUtil;
     @Autowired
-    private OrderService orderService;
+    private BaiduUtil baiduUtil;
 
     /**
      * 用户下单
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO) {
+    public OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO) throws Exception {
 
         //处理业务异常：购物车是否有数据、地址簿为空
         Long userId = BaseContext.getCurrentId();
-
 
         AddressBook addressBook = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
         if (addressBook == null) {
@@ -64,6 +64,13 @@ public class OrderServiceImpl implements OrderService {
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(userId);
         if (shoppingCartList == null || shoppingCartList.isEmpty()) {
             throw new ShoppingCartBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
+        }
+
+        //如果距离大于5公里抛出异常
+        String address = addressBook.getProvinceName()+ addressBook.getCityName() +
+                addressBook.getDistrictName() + addressBook.getDetail();
+        if (baiduUtil.getDistance(address) > 5) {
+            throw new OrderBusinessException(MessageConstant.DISTANCE_LIMIT_EXCEEDED_MESSAGE);
         }
 
         //向订单表orders插入1条数据
@@ -76,8 +83,6 @@ public class OrderServiceImpl implements OrderService {
         orders.setPayMethod(1); //微信
         orders.setPayStatus(Orders.UN_PAID); //付款状态：未付款
         orders.setPhone(addressBook.getPhone()); //用户手机号
-        String address = addressBook.getProvinceName()+ addressBook.getCityName() +
-                addressBook.getDistrictName() + addressBook.getDetail();
         orders.setAddress(address); //用户地址
         orders.setConsignee(addressBook.getConsignee()); //收货人
 

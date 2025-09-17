@@ -12,7 +12,7 @@ public interface OrderService {
     /**
      * 用户下单
      */
-    OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO);
+    OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO) throws Exception;
 
     /**
      * 订单支付
