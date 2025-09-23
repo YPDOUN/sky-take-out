@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 import com.sky.vo.OrderVO;
@@ -66,8 +67,13 @@ public interface OrderMapper {
     @Select("select sum(amount) from orders where order_time between #{begin} and #{end} and status = #{status}")
     Double sumByDate(LocalDateTime begin, LocalDateTime end, Integer status);
 
+    /**
+     * 获取指定时间段的用户订单数量
+     */
+    Integer getOrderCount(Map map);
 
-    @Select("select count(distinct user_id) from orders " +
-            "where order_time between #{beginTime} and #{endTime}")
-    Integer countOfUserByDate(LocalDateTime beginTime, LocalDateTime endTime);
+    /**
+     * 查询销量排名top10
+     */
+    List<GoodsSalesDTO> getSalesTop10(LocalDateTime beginTime, LocalDateTime endTime);
 }
