@@ -76,4 +76,15 @@ public interface OrderMapper {
      * 查询销量排名top10
      */
     List<GoodsSalesDTO> getSalesTop10(LocalDateTime beginTime, LocalDateTime endTime);
+
+    /**
+     * 获取指定时间段内下单的用户数
+     */
+    Integer userCountByDate(LocalDateTime beginTime, LocalDateTime endTime);
+
+    /**
+     * 查询订单总数
+     */
+    @Select("select count(id) from orders")
+    Integer getTotalOrder();
 }

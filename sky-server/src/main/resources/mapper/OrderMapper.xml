@@ -83,5 +83,10 @@
         limit 0,10;
     </select>
 
+    <select id="userCountByDate" resultType="java.lang.Integer">
+        select count(distinct user_id) from orders o join user u on u.id = o.user_id
+        where order_time &gt; #{beginTime} and order_time &lt; #{endTime} and  status = 5;
+    </select>
+
 
 </mapper>

@@ -77,4 +77,10 @@ public interface DishMapper {
      * @return
      */
     List<Dish> getBySetmealId(Long id);
+
+    /**
+     * 查询菜品总览
+     */
+    @Select("select count(*) from dish where status = #{status}")
+    Integer getOverviewOfDish(Integer status);
 }
